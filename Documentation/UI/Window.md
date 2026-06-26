@@ -7,7 +7,7 @@ local Window = UI:CreateWindow({
 ```
 
 ```luau
-UI:CreateTopbarToggle({
+UI:CreateTopbarToggle({ --TOGGLE
     Order = 4,
     EnableIcon = "banana",
     DisableIcon = "at-sign",
@@ -15,6 +15,13 @@ UI:CreateTopbarToggle({
     EnableBackground = Color3.fromRGB(155, 25, 25),
     Callback = function(Value)
         print(Value)
+    end
+})
+
+UI:CreateTopbarButton({ --BUTTON
+    Order = 4,
+    Callback = function()
+        print("Pisun")
     end
 })
 ```
