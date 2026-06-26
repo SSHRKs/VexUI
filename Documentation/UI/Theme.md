@@ -54,7 +54,7 @@ VexUI:AddTheme({
     Placeholder = Color3.fromRGB(20, 20, 20),
     Text = nil,
     SliderPart = Color3.fromRGB(255, 255, 255),
-  }
+  },
   Input = {
     Background = nil,
     Placeholder = Color3.fromRGB(20, 20, 20),
