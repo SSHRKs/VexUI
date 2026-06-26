@@ -1,3 +1,4 @@
+## Creating Window
 ```luau
 local Window = UI:CreateWindow({
     Name = "VexUI Example",
@@ -6,6 +7,7 @@ local Window = UI:CreateWindow({
 })
 ```
 
+## Creating TopBar Button / Toggle
 ```luau
 UI:CreateTopbarToggle({ --TOGGLE
     Order = 4,
