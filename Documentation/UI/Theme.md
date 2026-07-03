@@ -59,6 +59,11 @@ VexUI:AddTheme({
     Background = nil,
     Placeholder = Color3.fromRGB(20, 20, 20),
     Text = nil,
+  },
+  Keybind = {
+  Background = nil,
+  Placeholder = nil,
+  Text = nil,
   }
 })
 ```
