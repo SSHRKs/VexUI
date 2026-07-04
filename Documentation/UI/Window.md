@@ -18,8 +18,7 @@ local Window = UI:CreateWindow({
         Title = "Super Pisun",
         Desc = "Key Desc",
         KeyValidator = function(key)
-            local validKeys = {"key1", "key2", "key3"}
-            return table.find(validKeys, key) ~= nil
+            return key == "1234"
         end,
         URL = "1234", --LINK TO GET KEY
     },--]] -- Key System Not Finalized!
