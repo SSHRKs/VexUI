@@ -22,6 +22,10 @@ Input:SetDesc('New Desc')
 ```lua
 Input:SetMaxSymbols(999)
 ```
+## Set Input Value
+```lua
+Input:SetValue('New Value')
+```
 ## Destroy Element
 ```lua
 Input:Close()
