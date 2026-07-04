@@ -6,3 +6,13 @@ local Tab = Window:Tab({
     Border = true,
 })
 ```
+
+## Creating Section
+```lua
+local Section = Window:Section({
+    Title = "Other",
+    Icon = "hash",
+    Opened = true,
+})
+local Tab = Section:Tab({Title = "Tab"})
+```
