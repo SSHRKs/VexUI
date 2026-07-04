@@ -9,14 +9,14 @@ local Window = UI:CreateWindow({
         Enabled = true,
         Anonymous = true,
     },
-    KeySystem = {
+    --[[KeySystem = {
         Title = "VexUI Example",
         Desc = "This is an example of a key system using VexUI. \nKey: 1234 <key-round>",
         KeyValidator = function(key)
             return key == "1234"
         end,
         URL = "1234",
-    },
+    },--]]
 })
 
 UI:CreateTopbarButton({
