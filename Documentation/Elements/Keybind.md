@@ -16,6 +16,10 @@ Keybind:SetTitle('New Title')
 ```lua
 Keybind:SetDesc('New Desc')
 ```
+## Set Keybind Value
+```lua
+Keybind:SetValue('F')
+```
 ## Destroy Element
 ```lua
 Keybind:Close()
