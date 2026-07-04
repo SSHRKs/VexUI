@@ -1,3 +1,5 @@
+## Creating Slider
+```lua
 local Slider = Tab:Slider({
     Title = "Slider",
     Desc = "This is a slider",
@@ -11,3 +13,17 @@ local Slider = Tab:Slider({
         print(value)
     end
 })
+```
+
+## Set Title
+```lua
+Slider:SetTitle('New Title')
+```
+## Set Desc
+```lua
+Slider:SetDesc('New Desc')
+```
+## Destroy Element
+```lua
+Slider:Close()
+```
