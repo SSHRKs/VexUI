@@ -61,3 +61,14 @@ Window:SetTransparency(false) --true / false
 ```lua
 Window:SetToggleKey(Enum.KeyCode.F)
 ```
+
+
+## User
+## Set UserEnabled
+```lua
+Window:UserEnabled(true)
+```
+## Set Anonymous
+```lua
+Window:Anonymous(true)
+```
