@@ -46,3 +46,18 @@ UI:CreateTopbarButton({ --BUTTON
     end
 })
 ```
+
+## Setting Library
+
+## Set Theme
+```lua
+Window:SetTheme("Dark")
+```
+## Set Transparency
+```lua
+Window:SetTransparency(false) --true / false
+```
+## Set ToggleKey
+```lua
+Window:SetToggleKey(Enum.KeyCode.F)
+```
