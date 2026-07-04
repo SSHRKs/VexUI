@@ -9,3 +9,16 @@ local Input = Tab:Input({
     end
 })
 ```
+
+## Set Title
+```lua
+Input:SetTitle('New Title')
+```
+## Set Desc
+```lua
+Input:SetDesc('New Desc')
+```
+## Destroy Element
+```lua
+Input:Close()
+```
