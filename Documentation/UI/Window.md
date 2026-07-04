@@ -38,6 +38,7 @@ UI:CreateTopbarToggle({ --TOGGLE
 
 UI:CreateTopbarButton({ --BUTTON
     Order = 4,
+    Icon = "bird",
     Callback = function()
         print("Pisun")
     end
