@@ -18,7 +18,7 @@ local Window = UI:CreateWindow({
             local validKeys = {"key1", "key2", "key3"}
             return table.find(validKeys, key) ~= nil
         end,
-        URL = "1234", --URL
+        URL = "1234", --LINK TO GET KEY
     },--]] -- Key System Not Finalized!
 })
 ```
