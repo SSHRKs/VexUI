@@ -1,7 +1,7 @@
 ## Creating Section
 ```lua
-Settings:Section({
-    Title = "Window",
+local Section = Tab:Section({
+    Title = "Section",
     Icon = "bird",
     TextSize = 18,
 })
