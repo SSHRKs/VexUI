@@ -17,6 +17,10 @@ Toggle:SetTitle('New Title')
 ```lua
 Toggle:SetDesc('New Desc')
 ```
+## Set Value
+```lua
+Toggle:SetValue(true)
+```
 ## Destroy Element
 ```lua
 Toggle:Close()
