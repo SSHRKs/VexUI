@@ -11,3 +11,16 @@ local Dropdown = Tab:Dropdown({
 	end
 })
 ```
+
+## Set Title
+```lua
+Dropdown:SetTitle('New Title')
+```
+## Set Desc
+```lua
+Dropdown:SetDesc('New Desc')
+```
+## Destroy Element
+```lua
+Dropdown:Close()
+```
