@@ -1,9 +1,25 @@
 ## Creating Window
 ```luau
 local Window = UI:CreateWindow({
-    Name = "VexUI Example",
-    Icon = "bird",
-    Author = "By .s.h.ark."
+    Name = "Super Pisun",
+    Icon = "door-open",
+    SideBarWidth = 160,
+    Theme = "Dark",
+    Transparent = true,
+    --Author = "By .s.h.ark.",
+    --[[User = {
+        Enabled = true,
+        Anonymous = true,
+    },--]]
+    --[[KeySystem = {
+        Title = "Super Pisun",
+        Desc = "Key Desc",
+        KeyValidator = function(key)
+            local validKeys = {"key1", "key2", "key3"}
+            return table.find(validKeys, key) ~= nil
+        end,
+        URL = "1234", --URL
+    },--]] -- Key System Not Finalized!
 })
 ```
 
