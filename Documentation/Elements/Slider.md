@@ -23,6 +23,10 @@ Slider:SetTitle('New Title')
 ```lua
 Slider:SetDesc('New Desc')
 ```
+## Set Slider Value
+```lua
+Slider:SetValue(220)
+```
 ## Destroy Element
 ```lua
 Slider:Close()
