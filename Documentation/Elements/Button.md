@@ -7,3 +7,16 @@ local Button = Tab:Button({
     end
 })
 ```
+
+## Set Title
+```lua
+Button:SetTitle('New Title')
+```
+## Set Desc
+```lua
+Button:SetDesc('New Desc')
+```
+## Destroy Element
+```lua
+Button:Close()
+```
