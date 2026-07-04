@@ -20,6 +20,10 @@ Dropdown:SetTitle('New Title')
 ```lua
 Dropdown:SetDesc('New Desc')
 ```
+## Refresh Option
+```lua
+Dropdown:Refresh({"New Option 1", "New Option 2"})
+```
 ## Destroy Element
 ```lua
 Dropdown:Close()
