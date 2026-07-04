@@ -18,6 +18,10 @@ Input:SetTitle('New Title')
 ```lua
 Input:SetDesc('New Desc')
 ```
+## Set MaxSymbols
+```lua
+Input:SetMaxSymbols(999)
+```
 ## Destroy Element
 ```lua
 Input:Close()
