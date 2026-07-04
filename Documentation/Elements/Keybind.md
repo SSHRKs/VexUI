@@ -7,3 +7,16 @@ local Keybind = Tab:Keybind({
     end
 })
 ```
+
+## Set Title
+```lua
+Keybind:SetTitle('New Title')
+```
+## Set Desc
+```lua
+Keybind:SetDesc('New Desc')
+```
+## Destroy Element
+```lua
+Keybind:Close()
+```
