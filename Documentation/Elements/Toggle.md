@@ -8,3 +8,16 @@ local Toggle = Tab:Toggle({
     end
 })
 ```
+
+## Set Title
+```lua
+Toggle:SetTitle('New Title')
+```
+## Set Desc
+```lua
+Toggle:SetDesc('New Desc')
+```
+## Destroy Element
+```lua
+Toggle:Close()
+```
