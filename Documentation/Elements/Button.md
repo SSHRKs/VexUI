@@ -1,5 +1,5 @@
 ```lua
-Tab:Button({
+local Button = Tab:Button({
     Title = "Button",
     Desc = "This is a button",
     Callback = function()
