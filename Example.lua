@@ -1,4 +1,5 @@
-local Window = UI:CreateWindow({
+local VexUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/SSHRKs/VexUI/refs/heads/main/main.lua?token=GHSAT0AAAAAAD7TLOPQ7A2MCWQOLIF55BRK2SMERWA"))()
+local Window = VexUI:CreateWindow({
     Name = "VexUI Example",
     Icon = "door-open",
     SideBarWidth = 160,
@@ -19,13 +20,13 @@ local Window = UI:CreateWindow({
     },--]]
 })
 
-UI:CreateTopbarButton({
+VexUI:CreateTopbarButton({
     Order = 4,
     Callback = function()
         print("Pisun")
     end
 })
-UI:CreateTopbarToggle({
+VexUI:CreateTopbarToggle({
     Order = 4,
     EnableIcon = "banana",
     DisableIcon = "at-sign",
@@ -58,12 +59,6 @@ ManagementTab:Button({
     Title = "Button",
     Desc = "This is a button",
     Callback = function()
-        UI:Notification({
-        Title = "Title",
-        Icon = "bird",
-        Desc = "Hui",
-        Duration = 5
-        })
     end
 })
 ManagementTab:Button({
@@ -148,11 +143,11 @@ local Keybind = InputTab:Keybind({
 NotificationTab:Button({
     Title = "Notification",
     Callback = function()
-        UI:Notification({
-        Title = "Title",
-        Icon = "bird",
-        Desc = "Pisun",
-        Duration = 5
+        VexUI:Notification({
+	        Title = "Title",
+	        Icon = "bird",
+	        Desc = "Pisun",
+	        Duration = 5
         })
     end
 })
