@@ -27,7 +27,7 @@ local Window = UI:CreateWindow({
 
 ## Creating TopBar Button / Toggle
 ```luau
-UI:CreateTopbarToggle({ --TOGGLE
+VexUI:CreateTopbarToggle({ --TOGGLE
     Order = 4,
     EnableIcon = "banana",
     DisableIcon = "at-sign",
@@ -38,7 +38,7 @@ UI:CreateTopbarToggle({ --TOGGLE
     end
 })
 
-UI:CreateTopbarButton({ --BUTTON
+VexUI:CreateTopbarButton({ --BUTTON
     Order = 4,
     Icon = "bird",
     Callback = function()
@@ -47,6 +47,18 @@ UI:CreateTopbarButton({ --BUTTON
 })
 ```
 
+##Creating Dialog
+```lua
+VexUI:Dialog({
+    Title = "Dialog Title",
+    Desc = "Dialog Description",
+    --Image = "rbxassetid://14309518613",
+    Buttons = {
+        {Text = "Button 1", Callback = function() print("Button 1") end},
+        {Text = "Button 2", Callback = function() print("Button 2") end},
+    }
+})
+```
 ## Setting Library
 
 ## Set Theme
