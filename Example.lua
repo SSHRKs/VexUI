@@ -1,4 +1,4 @@
-local VexUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/SSHRKs/VexUI/refs/heads/main/main.lua?token=GHSAT0AAAAAAD7TLOPQ7A2MCWQOLIF55BRK2SMERWA"))()
+local VexUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/SSHRKs/VexUI/refs/heads/main/main.lua?token=GHSAT0AAAAAAEB4ZMURIRQLJ5KZMNOZGVCW2SMITRQ"))()
 local Window = VexUI:CreateWindow({
     Name = "VexUI Example",
     Icon = "door-open",
