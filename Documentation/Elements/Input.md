@@ -9,24 +9,14 @@ local Input = Tab:Input({
     end
 })
 ```
-
-## Set Title
-```lua
-Input:SetTitle('New Title')
-```
-## Set Desc
-```lua
-Input:SetDesc('New Desc')
-```
-## Set MaxSymbols
-```lua
-Input:SetMaxSymbols(999)
-```
-## Set Input Value
-```lua
-Input:SetValue('New Value')
-```
-## Destroy Element
-```lua
-Input:Close()
-```
+## Properties
+- `Title = string`
+- `Desc = string`
+- `MaxSymbols = number`
+- `Callback = function`
+## Methods
+- `:SetTitle('New Title')`
+- `:SetDesc('New Desc')`
+- `:SetMaxSymbols(999)`
+- `:SetValue('New Value')`
+- `:Close()`
