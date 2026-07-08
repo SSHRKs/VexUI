@@ -59,28 +59,18 @@ VexUI:Dialog({
     }
 })
 ```
-## Setting Library
+## Methods
+- `:SetTitle("New Name")`
+- `:SetAuthor("New Author")`
+- `:ToCenter()`
+- `:SetTransparency(false)`
+- `:SetTheme("Dark")`
+- `:GetTheme()`
+- `:SetToggleKey(Enum.KeyCode.F)`
+- `:Destroy()`
+- `:Open()`
+- `:Close()`
 
-## Set Theme
-```lua
-Window:SetTheme("Dark")
-```
-## Set Transparency
-```lua
-Window:SetTransparency(false) --true / false
-```
-## Set ToggleKey
-```lua
-Window:SetToggleKey(Enum.KeyCode.F)
-```
-
-
-## User
-## Set UserEnabled
-```lua
-Window:UserEnabled(true)
-```
-## Set Anonymous
-```lua
-Window:Anonymous(true)
-```
+## User Methods
+- `:UserEnabled(true)`
+- `:Anonymous(true)`
