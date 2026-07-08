@@ -1,6 +1,6 @@
 ## Creating Window
 ```luau
-local Window = UI:CreateWindow({
+local Window = VexUI:CreateWindow({
     Name = "Super Pisun",
     Icon = "door-open",
     SideBarWidth = 160,
