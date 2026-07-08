@@ -180,43 +180,46 @@ end
 local IconsV2 = loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/Footagesus/Icons/main/Main-v2.lua"))()
 IconsV2.SetIconsType("lucide")
 
+local UserInputService = game:GetService("UserInputService")
+
 local function enableDragging(frame)
     local dragging = false
-    local dragInput, mousePos, framePos
+    local dragInput
+    local startPos
+    local startFramePos
 
     local function update(input)
-        local delta = input.Position - mousePos
-        frame.Position = UDim2.new(framePos.X.Scale, framePos.X.Offset + delta.X, framePos.Y.Scale, framePos.Y.Offset + delta.Y)
+        local delta = input.Position - startPos
+        frame.Position = UDim2.new(startFramePos.X.Scale, startFramePos.X.Offset + delta.X, startFramePos.Y.Scale, startFramePos.Y.Offset + delta.Y)
     end
 
     frame.InputBegan:Connect(function(input)
-        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+        if input.UserInputType == Enum.UserInputType.MouseButton1
+            or input.UserInputType == Enum.UserInputType.Touch then
+
             dragging = true
-            mousePos = input.Position
-            framePos = frame.Position
+            startPos = input.Position
+            startFramePos = frame.Position
 
             input.Changed:Connect(function()
                 if input.UserInputState == Enum.UserInputState.End then
                     dragging = false
                 end
             end)
-
-            local userInputService = game:GetService("UserInputService")
-            dragInput = userInputService.InputChanged:Connect(function(inputChanged)
-                if dragging and (inputChanged.UserInputType == Enum.UserInputType.MouseMovement or inputChanged.UserInputType == Enum.UserInputType.Touch) then
-                    update(inputChanged)
-                end
-            end)
         end
     end)
 
     frame.InputEnded:Connect(function(input)
-        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+        if input.UserInputType == Enum.UserInputType.MouseButton1
+            or input.UserInputType == Enum.UserInputType.Touch then
+
             dragging = false
-            if dragInput then
-                dragInput:Disconnect()
-                dragInput = nil
-            end
+        end
+    end)
+
+    UserInputService.InputChanged:Connect(function(input)
+        if dragging and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
+            update(input)
         end
     end)
 end
@@ -370,7 +373,7 @@ end
     local UIScreen = VexUI:Create("ScreenGui", {
         Parent = game:GetService("CoreGui"),
         --ZIndexBehavior = Enum.ZIndexBehavior.Sibling,
-        ResetOnSpawn = false
+        ResetOnSpawn = false,
     })
 
     local Island = VexUI:Create("Frame", {
@@ -415,6 +418,7 @@ function UI:CreateWindow(Config)
         Folder = Config.Folder,
         KeySystem = Config.KeySystem or {},
         Default = Config.Default or "Default", --Default, Minimize
+        AutoScale = Config.AutoScale or true,
         Topbar = {
             Height = Config.Height or 35,
         },
@@ -903,6 +907,9 @@ function UI:CreateWindow(Config)
                 Padding = UDim.new(0, 5),
             }),
         }),
+        VexUI:Create("UIScale", {
+            Scale = 1,
+        }),
     })
     enableDragging(Main)
 
@@ -1135,32 +1142,40 @@ function UI:CreateWindow(Config)
             Title = Config.Title or "Dialog",
             Desc = Config.Desc or nil,
             Buttons = Config.Buttons or {},
+            Image = Config.Image or nil,
+            Count = 0,
         }
 
         local Overlay = VexUI:Create("Frame", {
             Parent = Main,
             Size = UDim2.new(1, 0, 1, 0),
-            BackgroundColor3 = Color3.fromRGB(0, 0, 0),
-            BackgroundTransparency = 0.5,
-            BorderSizePixel = 0,
-            ZIndex = 149,
-        })
-
-        local DialogFrame = VexUI:Create("Frame", {
-            Parent = Main,
-            AnchorPoint = Vector2.new(0.5, 0.5),
-            Position = UDim2.new(0.5, 0, 0.5, 0),
-            Size = UDim2.new(0, 190, 0, 0),
-            AutomaticSize = "Y",
-            BackgroundColor3 = Color3.fromRGB(33, 33, 33),
-            BorderSizePixel = 0,
-            ZIndex = 150,
+            BackgroundTransparency = 0.1,
+            Active = true,
+            ZIndex = 1000,
             ThemeID = {
                 BackgroundColor3 = "Background"
             }
         }, {
             VexUI:Create("UICorner", {
-                CornerRadius = UDim.new(0, 12),
+                CornerRadius = UDim.new(0, 16),
+            }),
+        })
+
+        local DialogFrame = VexUI:Create("Frame", {
+            Parent = Overlay,
+            AnchorPoint = Vector2.new(0.5, 0.5),
+            Position = UDim2.new(0.5, 0, 0.5, 0),
+            Size = UDim2.new(0, 190, 0, 0),
+            ClipsDescendants = true,
+            --AutomaticSize = "Y",
+            Active = true,
+            ZIndex = 1001,
+            ThemeID = {
+                BackgroundColor3 = "Dialog.Background|SideBar"
+            }
+        }, {
+            VexUI:Create("UICorner", {
+                CornerRadius = UDim.new(0, 16),
             }),
             VexUI:Create("UIListLayout", {
                 FillDirection = Enum.FillDirection.Vertical,
@@ -1174,10 +1189,29 @@ function UI:CreateWindow(Config)
                 PaddingRight = UDim.new(0, 10),
             }),
         })
+        DialogFrame.UIListLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
+            Utility:TweenObject(DialogFrame, {Size = UDim2.new(0, 200, 0, DialogFrame.UIListLayout.AbsoluteContentSize.Y + 20)}, 0, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+        end)
 
-        -- Title
-        VexUI:Create("TextLabel", {
-            Parent = DialogFrame,
+        local Image
+        if Dialog.Image then
+            Image = VexUI:Create("ImageLabel", {
+                AnchorPoint = Vector2.new(0, 0.5),
+                BackgroundTransparency = 1,
+                Position = UDim2.new(0, 0, 0, 0),
+                Size = UDim2.new(0, 180, 0, 60),
+                ZIndex = 1002,
+                ScaleType = "Crop",
+                Parent = DialogFrame,
+            }, {
+                VexUI:Create("UICorner", {
+                    CornerRadius = UDim.new(0, 16),
+                }),
+            })
+            Image.Image = Dialog.Image
+        end
+
+        CreateRichIconText(DialogFrame, Dialog.Title, {
             LayoutOrder = 1,
             BackgroundTransparency = 1,
             BorderSizePixel = 0,
@@ -1187,18 +1221,17 @@ function UI:CreateWindow(Config)
             FontFace = Font.new([[rbxassetid://12187365364]], Enum.FontWeight.SemiBold, Enum.FontStyle.Normal),
             Text = Dialog.Title,
             TextSize = 14,
-            ZIndex = 152,
+            ZIndex = 1002,
             TextWrapped = true,
             TextColor3 = Color3.fromRGB(255, 255, 255),
             TextXAlignment = Enum.TextXAlignment.Left,
             ThemeID = {
-                TextColor3 = "Text"
+                TextColor3 = "Dialog.Text|Text"
             }
         })
 
-        -- Desc
         if Dialog.Desc then
-            VexUI:Create("TextLabel", {
+            CreateRichIconText(DialogFrame, Dialog.Desc, {
                 Parent = DialogFrame,
                 LayoutOrder = 2,
                 BackgroundTransparency = 1,
@@ -1207,17 +1240,112 @@ function UI:CreateWindow(Config)
                 Size = UDim2.new(1, 0, 0, 0),
                 AutomaticSize = "Y",
                 FontFace = Font.new([[rbxassetid://12187365364]], Enum.FontWeight.Regular, Enum.FontStyle.Normal),
-                Text = Dialog.Desc,
                 TextSize = 12,
                 TextTransparency = 0.5,
-                ZIndex = 152,
+                ZIndex = 1002,
                 TextWrapped = true,
                 TextColor3 = Color3.fromRGB(255, 255, 255),
                 TextXAlignment = Enum.TextXAlignment.Left,
                 ThemeID = {
-                    TextColor3 = "Text"
+                    TextColor3 = "Dialog.Text|Text"
                 }
             })
+        end
+
+        if Dialog.Buttons then
+            local ButtonsFrame = VexUI:Create("Frame", {
+                Parent = DialogFrame,
+                LayoutOrder = 3,
+                Size = UDim2.new(1, 0, 0, 0),
+                AutomaticSize = Enum.AutomaticSize.Y,
+                BackgroundTransparency = 1,
+                ZIndex = 1002,
+            }, {
+                VexUI:Create("UIListLayout", {
+                    FillDirection = Enum.FillDirection.Vertical,
+                    SortOrder = Enum.SortOrder.LayoutOrder,
+                    Padding = UDim.new(0, 6),
+                }),
+            })
+
+            local Rows = {}
+            for i = 1, #Dialog.Buttons, 2 do
+                table.insert(Rows, {Dialog.Buttons[i], Dialog.Buttons[i + 1]})
+            end
+
+            for rowIndex, Row in ipairs(Rows) do
+                local RowFrame = VexUI:Create("Frame", {
+                    Parent = ButtonsFrame,
+                    LayoutOrder = rowIndex,
+                    Size = UDim2.new(1, 0, 0, 30),
+                    BackgroundTransparency = 1,
+                    ZIndex = 1002,
+                }, {
+                    VexUI:Create("UIListLayout", {
+                        FillDirection = Enum.FillDirection.Horizontal,
+                        SortOrder = Enum.SortOrder.LayoutOrder,
+                        Padding = UDim.new(0, 6),
+                    }),
+                })
+
+                local ButtonsInRow = 0
+                for _, cfg in ipairs(Row) do
+                    if cfg then
+                        ButtonsInRow = ButtonsInRow + 1
+                    end
+                end
+
+                for colIndex, ButtonConfig in ipairs(Row) do
+                    Dialog.Count = Dialog.Count + 1
+
+                    local Width
+                    if ButtonsInRow == 1 then
+                        Width = UDim2.new(1, 0, 1, 0)
+                    else
+                        Width = UDim2.new(0.5, -3, 1, 0)
+                    end
+
+                    local Button = VexUI:Create("TextButton", {
+                        Parent = RowFrame,
+                        LayoutOrder = colIndex,
+                        Size = Width,
+                        BackgroundColor3 = Color3.fromRGB(45, 45, 45),
+                        AutoButtonColor = false,
+                        Text = "",
+                        ZIndex = 1002,
+                        ThemeID = {
+                            BackgroundColor3 = "Dialog.Button|ElementColor"
+                        }
+                    }, {
+                        VexUI:Create("UICorner", {
+                            CornerRadius = UDim.new(0, 10),
+                        }),
+                        VexUI:Create("TextLabel", {
+                            BackgroundTransparency = 1,
+                            Size = UDim2.new(1, 0, 1, 0),
+                            FontFace = Font.new([[rbxassetid://12187365364]], Enum.FontWeight.SemiBold, Enum.FontStyle.Normal),
+                            Text = ButtonConfig.Text or "Button",
+                            TextSize = 14,
+                            ZIndex = 1002,
+                            TextColor3 = Color3.fromRGB(255, 255, 255),
+                            TextXAlignment = Enum.TextXAlignment.Center,
+                            ThemeID = {
+                                TextColor3 = "Text"
+                            }
+                        }),
+                    })
+
+                    Button.MouseButton1Click:Connect(function()
+                        if ButtonConfig.Callback then
+                            ButtonConfig.Callback()
+                        end
+                        Utility:TweenObject(Overlay, {Transparency = 1}, 0.2, Enum.EasingStyle.Linear, Enum.EasingDirection.Out)
+                        Utility:TweenObject(DialogFrame, {Size = UDim2.new(0, 200, 0, 0)}, 0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+                        task.wait(0.2)
+                        Overlay:Destroy()
+                    end)
+                end
+            end
         end
         return Dialog
     end
@@ -3744,7 +3872,6 @@ function UI:CreateWindow(Config)
                 Title = Config.Title or "Keybind",
                 Desc = Config.Desc or nil,
                 Value = Config.Value or "F",
-                Locked = Config.Locked or false,
                 Callback = Config.Callback or function() end,
                 SizeY = 40
             }
@@ -4262,6 +4389,31 @@ function UI:CreateWindow(Config)
         Utility:TweenObject(TabFrame.Frame, {Transparency = Value and 1 or 0}, 0.1, Enum.EasingStyle.Linear, Enum.EasingDirection.Out)
         return Window
     end
+
+	function Window:GetUIScale()
+		return Window.Size
+	end
+
+    function Window:SetUIScale(v)
+        Utility:TweenObject(Main.UIScale, {Scale = v}, 0.2, Enum.EasingStyle.Quint, Enum.EasingDirection.Out)
+        return Window
+    end
+
+    if Window.AutoScale then
+        local Camera = workspace.CurrentCamera
+
+        local AvailableWidth = Camera.ViewportSize.X - (40 * 2)
+        local AvailableHeight = Camera.ViewportSize.Y - (40 * 2)
+
+        local ScaleX = AvailableWidth / Window.Size.X.Offset
+        local ScaleY = AvailableHeight / Window.Size.Y.Offset
+
+        local MinScale = 0.3
+        local MaxScale = 1.0
+
+        Window:SetUIScale(math.clamp(math.min(ScaleX, ScaleY), MinScale, MaxScale))
+    end
+
     UI.Window = Window
     return Window
 end
@@ -4432,7 +4584,7 @@ function UI:Notification(Config)
     NotifFrame.MouseLeave:connect(function()
         Utility:TweenObject(NotifFrame1, {Size = UDim2.new(1, 0, 1, 0)}, 0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
         Utility:TweenObject(NotifFrame1, {Position = UDim2.new(0, 0, 0, 0)}, 0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
-    end)--]]  -- Soon :>
+    end)--]]
 
         Utility:TweenObject(NotifFrame, {Size = UDim2.new(0, 150, 0, 30)}, 0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
         coroutine.wrap(function()
@@ -4465,8 +4617,9 @@ end
 
 return UI
 
+--[[local VexUI = UI
 
---[[local Window = UI:CreateWindow({
+local Window = VexUI:CreateWindow({
     Name = "VexUI Example",
     Icon = "door-open",
     SideBarWidth = 160,
@@ -4502,13 +4655,13 @@ Window:EditOpenButton({
     CornerRadius = UDim.new(0,16),
 })
 
-UI:CreateTopbarButton({
+VexUI:CreateTopbarButton({
     Order = 4,
     Callback = function()
         print("Pisun")
     end
 })
-UI:CreateTopbarToggle({
+VexUI:CreateTopbarToggle({
     Order = 4,
     EnableIcon = "banana",
     DisableIcon = "at-sign",
@@ -4541,12 +4694,7 @@ ManagementTab:Button({
     Title = "Button",
     Desc = "This is a button",
     Callback = function()
-        UI:Notification({
-        Title = "Title",
-        Icon = "bird",
-        Desc = "Hui",
-        Duration = 5
-        })
+        print("Click")
     end
 })
 ManagementTab:Button({
@@ -4631,11 +4779,11 @@ local Keybind = InputTab:Keybind({
 NotificationTab:Button({
     Title = "Notification",
     Callback = function()
-        UI:Notification({
-        Title = "Title",
-        Icon = "bird",
-        Desc = "Pisun",
-        Duration = 5
+        VexUI:Notification({
+            Title = "Title",
+            Icon = "bird",
+            Desc = "Pisun",
+            Duration = 5
         })
     end
 })
@@ -4647,7 +4795,7 @@ Settings:Dropdown({
 	Value = "Dark",
 	Callback = function(Value)
 		Window:SetTheme(Value)
-        UI:Notification({
+        VexUI:Notification({
             Title = "Selected Theme: " .. Value,
             Icon = "bird",
             Duration = 2
