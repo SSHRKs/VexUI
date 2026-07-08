@@ -1,6 +1,6 @@
 ## Creating Notification
 ```lua
-UI:Notification({
+VexUI:Notification({
     Title = "Title",
     Icon = "bird",
     Desc = "Pisun",
