@@ -8,10 +8,10 @@ local Button = Tab:Button({
 })
 ```
 ## Properties
-- Title = string
-- Desc = string
-- Callback = function
+- `Title = string`
+- `Desc = string`
+- `Callback = function`
 ## Methods
-- :SetTitle('New Title')
-- :SetDesc('New Desc')
-- :Close()
+- `:SetTitle('New Title')`
+- `:SetDesc('New Desc')`
+- `:Close()`
