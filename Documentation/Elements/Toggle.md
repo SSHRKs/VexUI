@@ -8,20 +8,13 @@ local Toggle = Tab:Toggle({
     end
 })
 ```
-
-## Set Title
-```lua
-Toggle:SetTitle('New Title')
-```
-## Set Desc
-```lua
-Toggle:SetDesc('New Desc')
-```
-## Set Value
-```lua
-Toggle:SetValue(true)
-```
-## Destroy Element
-```lua
-Toggle:Close()
-```
+## Properties
+- `Title = string`
+- `Desc = string`
+- `Default = bool`
+- `Callback = function`
+## Methods
+- `:SetTitle('New Title')`
+- `:SetDesc('New Desc')`
+- `:SetValue(true)`
+- `:Close()`
