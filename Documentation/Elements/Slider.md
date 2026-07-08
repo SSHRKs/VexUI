@@ -14,20 +14,17 @@ local Slider = Tab:Slider({
     end
 })
 ```
-
-## Set Title
-```lua
-Slider:SetTitle('New Title')
-```
-## Set Desc
-```lua
-Slider:SetDesc('New Desc')
-```
-## Set Slider Value
-```lua
-Slider:SetValue(220)
-```
-## Destroy Element
-```lua
-Slider:Close()
-```
+## Properties
+- `Title = string`
+- `Desc = string`
+- `Value = table`
+- `Min = number`
+- `Max = number`
+- `Default = number`
+- `Step = number`
+- `Callback = function`
+## Methods
+- `:SetTitle('New Title')`
+- `:SetDesc('New Desc')`
+- `:SetValue(220)`
+- `:Close()`
