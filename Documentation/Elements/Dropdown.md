@@ -2,7 +2,7 @@
 ```lua
 local Dropdown = Tab:Dropdown({
 	Title = "Dropdown",
-  Desc = "This is a dropdown",
+    Desc = "This is a dropdown",
 	Multi = false,
 	Option = {"Option 1", "Option 2", "Option 3",},
 	Value = "Option 1",
@@ -11,20 +11,16 @@ local Dropdown = Tab:Dropdown({
 	end
 })
 ```
-
-## Set Title
-```lua
-Dropdown:SetTitle('New Title')
-```
-## Set Desc
-```lua
-Dropdown:SetDesc('New Desc')
-```
-## Refresh Option
-```lua
-Dropdown:Refresh({"New Option 1", "New Option 2"})
-```
-## Destroy Element
-```lua
-Dropdown:Close()
-```
+## Properties
+- `Title = string`
+- `Desc = string`
+- `Multi = bool`
+- `Callback = function`
+- `Option = table`
+- `Value = string`
+- `Callback = function()`
+## Methods
+- `:SetTitle('New Title')`
+- `:SetDesc('New Desc')`
+- `:Refresh({"New Option 1", "New Option 2"})`
+- `:Close()`
