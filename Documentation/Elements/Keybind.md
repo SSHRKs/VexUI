@@ -7,20 +7,13 @@ local Keybind = Tab:Keybind({
     end
 })
 ```
-
-## Set Title
-```lua
-Keybind:SetTitle('New Title')
-```
-## Set Desc
-```lua
-Keybind:SetDesc('New Desc')
-```
-## Set Keybind Value
-```lua
-Keybind:SetValue('F')
-```
-## Destroy Element
-```lua
-Keybind:Close()
-```
+## Properties
+- `Title = string`
+- `Desc = string`
+- `Value = string`
+- `Callback = function`
+## Methods
+- `:SetTitle('New Title')`
+- `:SetDesc('New Desc')`
+- `:SetValue('F')`
+- `:Close()`
