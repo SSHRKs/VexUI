@@ -147,7 +147,7 @@ NotificationTab:Button({
 Settings:Section({Title = "Window"})
 Settings:Dropdown({
 	Title = "Theme",
-	Option = {"Dark","Light", "Forest"},
+	Option = {"Dark","Light", "Forest", "Ocean"},
 	Value = "Dark",
 	Callback = function(Value)
 		Window:SetTheme(Value)
