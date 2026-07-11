@@ -12,6 +12,21 @@ local Window = VexUI:CreateWindow({
     },
 })
 
+Window:EditOpenButton({
+    Title = "Open VexUI",
+    Icon = "door-open",
+    Transparency = 0.2,
+    StrokeThickness = 1,
+    Rotation = 0,
+    Color = ColorSequence.new{
+        ColorSequenceKeypoint.new(0, Color3.fromRGB(0, 255, 80)),
+        ColorSequenceKeypoint.new(1, Color3.fromRGB(0, 90, 255))
+    },
+    AutoRotation = true,
+    Speed = 15,
+    CornerRadius = UDim.new(0,16),
+})
+
 VexUI:CreateTopbarButton({
     Order = 4,
     Callback = function()
@@ -46,11 +61,26 @@ DisplayElements:Paragraph({
     Desc = "This is a Paragraph",
     Icon = "bird"
 })
+DisplayElements:Paragraph({
+    Title = "Paragraph Thumbnail",
+    Desc = "This is a Paragraph",
+    Thumbnail = "rbxassetid://78903626783621",
+    Icon = "bird"
+})
+DisplayElements:Section({Title = "Color Paragraph", Icon = "paintbrush"})
+local Colors = {"Red", "Coral", "Orange", "Yellow", "Green", "Mint", "Cyan", "Blue", "Purple", "Pink"}
+local ColorCount = 0
+for i = 1, 10 do
+    ColorCount = ColorCount + 1
+    DisplayElements:Paragraph({Title = Colors[ColorCount],Color = Colors[ColorCount]})
+end
+
 --#ManagementTab
 ManagementTab:Button({
     Title = "Button",
     Desc = "This is a button",
     Callback = function()
+        print("Click")
     end
 })
 ManagementTab:Button({
@@ -133,13 +163,23 @@ local Keybind = InputTab:Keybind({
 })
 
 NotificationTab:Button({
+    Title = "Notification Icon",
+    Callback = function()
+        VexUI:Notification({
+            Title = "Title",
+            Icon = "bird",
+            Desc = "Pisun",
+            Duration = 5
+        })
+    end
+})
+NotificationTab:Button({
     Title = "Notification",
     Callback = function()
         VexUI:Notification({
-	        Title = "Title",
-	        Icon = "bird",
-	        Desc = "Pisun",
-	        Duration = 5
+            Title = "Title",
+            Desc = "Pisun",
+            Duration = 5
         })
     end
 })
@@ -147,10 +187,15 @@ NotificationTab:Button({
 Settings:Section({Title = "Window"})
 Settings:Dropdown({
 	Title = "Theme",
-	Option = {"Dark","Light", "Forest", "Ocean"},
+	Option = {"Dark","Light", "Forest"},
 	Value = "Dark",
 	Callback = function(Value)
 		Window:SetTheme(Value)
+        VexUI:Notification({
+            Title = "Selected Theme: " .. Value,
+            Icon = "bird",
+            Duration = 2
+        })
 	end
 })
 Settings:Toggle({
@@ -183,5 +228,6 @@ Settings:Section({Title = "Other"})
 Settings:Button({
     Title = "Destroy UI",
     Callback = function()
+        Window:Destroy()
     end
 })
