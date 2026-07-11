@@ -17,7 +17,7 @@ local Paragraph = Tab:Paragraph({
 - `:SetDesc('New Desc')`
 - `:Close()`
 
-## Dedault Colors
+## Default Colors
 ```lua
 Red    = Color3.fromRGB(255, 45, 85),
 Green  = Color3.fromRGB(52, 255, 130),
