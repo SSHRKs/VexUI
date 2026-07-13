@@ -1,4 +1,3 @@
-// VexUI documentation content & navigation map
 
 const ICONS = {
   doc: `<rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/>`,
