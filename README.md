@@ -1,4 +1,4 @@
-## **[Documentation](https://github.com/SSHRKs/VexUI/tree/main/Documentation)**
+## **[Documentation](https://sshrks.github.io/VexUI/#loadstring)**
 
 ![UI](https://github.com/SSHRKs/VexUI/blob/main/Images/image.png)
 
