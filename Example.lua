@@ -47,7 +47,7 @@ local ManagementTab = Window:Tab({Title = "Management", Icon = "chart-no-axes-ga
 local InputTab = Window:Tab({Title = "Input Elements", Icon = "file-input",Border = true,})
 local NotificationTab = Window:Tab({Title = "Notification", Icon = "message-square-dot",Border = true,})
 local LockedTab = Window:Tab({Title = "Locked Elements", Icon = "lock-keyhole",Border = true,})
-Window:SelectTab(3)
+Window:SelectTab(1)
 local Section = Window:Section({ Title = "Other", Icon = "hash" })
 local Settings = Section:Tab({ Title = "Settings", Icon = "settings",Border = true})
 
