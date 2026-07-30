@@ -10,6 +10,14 @@ local Window = VexUI:CreateWindow({
         Enabled = true,
         Anonymous = true,
     },
+    KeySystem = {
+        Title = "VexUI Example",
+        Desc = "This is an example of a key system using VexUI. \nKey: 1234 <key-round>",
+        KeyValidator = function(key)
+            return key == "1234"
+        end,
+        URL = "1234",
+    },
 })
 
 Window:EditOpenButton({
@@ -46,9 +54,11 @@ local DisplayElements = Window:Tab({Title = "Display Elements",Icon = "picture-i
 local ManagementTab = Window:Tab({Title = "Management", Icon = "chart-no-axes-gantt",Border = true,})
 local InputTab = Window:Tab({Title = "Input Elements", Icon = "file-input",Border = true,})
 local NotificationTab = Window:Tab({Title = "Notification", Icon = "message-square-dot",Border = true,})
-
+local LockedTab = Window:Tab({Title = "Locked Elements", Icon = "lock-keyhole",Border = true,})
+Window:SelectTab(3)
 local Section = Window:Section({ Title = "Other", Icon = "hash" })
 local Settings = Section:Tab({ Title = "Settings", Icon = "settings",Border = true})
+
 
 --DisplayElements
 DisplayElements:Section({Title = "Section"})
@@ -61,6 +71,7 @@ DisplayElements:Paragraph({
     Desc = "This is a Paragraph",
     Icon = "bird"
 })
+DisplayElements:Devider()
 DisplayElements:Paragraph({
     Title = "Paragraph Thumbnail",
     Desc = "This is a Paragraph",
@@ -183,6 +194,89 @@ NotificationTab:Button({
         })
     end
 })
+
+local LockBtn = LockedTab:Button({
+    Title = "Button",
+    Locked = true,
+    Callback = function()
+        print("Pisun")
+    end
+})
+
+local LockTog = LockedTab:Toggle({
+    Title = "Toggle",
+    Locked = true,
+    Callback = function(Value)
+        print(Value)
+    end
+})
+
+local LockSlider = LockedTab:Slider({
+    Title = "Slider",
+    Locked = true,
+    Value = {
+        Min = 0,
+        Max = 100,
+        Default = 25,
+    },
+    Step = 1,
+    Callback = function(Value)
+        print(Value)
+    end
+})
+
+local LockDrop = LockedTab:Dropdown({
+	Title = "Dropdown",
+    Locked = true,
+	Multi = false,
+	Option = {"Option 1", "Option 2", "Option 3", "Option 4", "Option 5", "Option 6", "Option 7", "Option 8", "Option 9", "Option 10", "Option 11", "Option 12",
+			"Option 13", "Option 14", "Option 15", "Option 16", "Option 17", "Option 18", "Option 19", "Option 20", "Option 21", "Option 22", "Option 23", "Option 24",
+			"Option 25", "Option 26", "Option 27", "Option 28", "Option 29", "Option 30", "Pisun"},
+	Value = "Option 1",
+	Callback = function(Value)
+		print(Value)
+	end
+})
+
+local LockInp = LockedTab:Input({
+    Title = "Input",
+    Locked = true,
+    Callback = function(input)
+        print(input)
+    end
+})
+
+local LockKey = LockedTab:Keybind({
+    Title = "Keybind",
+    Locked = true,
+    Callback = function(key)
+        print(key)
+    end
+})
+
+LockedTab:Toggle({
+    Title = "Lock / UnLock",
+    Default = true,
+    Callback = function(Value)
+        if Value then
+            LockBtn:Lock()
+            LockTog:Lock()
+            LockSlider:Lock()
+            LockDrop:Lock()
+            LockInp:Lock()
+            LockKey:Lock()
+        else
+            LockBtn:UnLock()
+            LockTog:UnLock()
+            LockSlider:UnLock()
+            LockDrop:UnLock()
+            LockInp:UnLock()
+            LockKey:UnLock()
+        end
+    end
+})
+
+
 
 Settings:Section({Title = "Window"})
 Settings:Dropdown({
