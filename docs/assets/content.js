@@ -18,6 +18,8 @@ const ICONS = {
   keyboard: `<rect x="2" y="6" width="20" height="12" rx="2"/><path d="M6 10h.01M10 10h.01M14 10h.01M18 10h.01M6 14h12"/>`,
   columns: `<rect x="3" y="4" width="8" height="16" rx="2"/><rect x="13" y="4" width="8" height="16" rx="2"/>`,
   italic: `<line x1="19" y1="4" x2="10" y2="4"/><line x1="14" y1="20" x2="5" y2="20"/><line x1="15" y1="4" x2="9" y2="20"/>`,
+  group: `<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>`,
+  tag: `<path d="M3 7v10a2 2 0 0 0 2 2h10l6-6-6-6H5a2 2 0 0 0-2 2z"/>`,
 };
 
 function icon(name, size = 15){
@@ -38,6 +40,7 @@ const NAV = [
       { id: "window", title: "Window", icon: "window" },
       { id: "tab", title: "Tab", icon: "layers" },
       { id: "dialog", title: "Dialog", icon: "message" },
+      { id: "tag", title: "Tag", icon: "layers", new: true },
       { id: "notification", title: "Notification", icon: "bell" },
     ]
   },
@@ -52,6 +55,7 @@ const NAV = [
       { id: "input", title: "Input", icon: "cursor" },
       { id: "dropdown", title: "Dropdown", icon: "chevronBox" },
       { id: "keybind", title: "Keybind", icon: "keyboard" },
+      { id: "group", title: "Group", icon: "group", new: true },
     ]
   }
 ];
@@ -623,6 +627,40 @@ local Tab = Section:Tab({Title = "Tab"})`)}
         ":SetValue('F')",
         ":Close()",
       ])}
+    `
+  },
+  tag: {
+    title: "Tag",
+    subtitle: "A small label for displaying text or status.",
+    html: `
+      ${code("lua", `Window:Tag({
+    Name = "Version 1.0.7",
+    Color = Color3.fromRGB(255, 45, 85)
+})`)}
+      <h2>Properties</h2>
+      <table class="ptable">
+        <tr><th>Name</th><th>Type</th></tr>
+        <tr><td>Name</td><td>string</td></tr>
+        <tr><td>Icon</td><td>string</td></tr>
+        <tr><td>Color</td><td>Color3</td></tr>
+        <tr><td>Corner</td><td>number</td></tr>
+      </table>
+      <h2>Methods</h2>
+      ${bulletList([
+        ":SetTitle('Text')",
+        ":SetColor(Color3.fromRGB(255, 255, 255))",
+        ":SetCorner(16)",
+      ])}
+    `
+  },
+  group: {
+    title: "Group",
+    subtitle: "A container for elements.",
+    html: `
+      ${code("lua", `local Group = Tab:Group({})
+local group = GroupTab:Group({})
+group:Toggle({ Title = "Toggle 1", Callback = function(v) print(v) end })
+group:Toggle({ Title = "Toggle 2", Callback = function(v) print(v) end })`)}
     `
   },
 };
