@@ -10,6 +10,14 @@ local Window = VexUI:CreateWindow({
         Enabled = true,
         Anonymous = true,
     },
+    KeySystem = {
+        Title = "VexUI Example",
+        Desc = "This is an example of a key system using VexUI. \nKey: 1234 <key-round>",
+        KeyValidator = function(key)
+            return key == "1234"
+        end,
+        URL = "1234",
+    },
 })
 
 Window:EditOpenButton({
@@ -47,12 +55,11 @@ local ManagementTab = Window:Tab({Title = "Management", Icon = "chart-no-axes-ga
 local InputTab = Window:Tab({Title = "Input Elements", Icon = "file-input",Border = true,})
 local NotificationTab = Window:Tab({Title = "Notification", Icon = "message-square-dot",Border = true,})
 local LockedTab = Window:Tab({Title = "Locked Elements", Icon = "lock-keyhole",Border = true,})
+local GroupTab = Window:Tab({Title = "Group", Icon = "group",Border = true,})
 Window:SelectTab(1)
 local Section = Window:Section({ Title = "Other", Icon = "hash" })
 local Settings = Section:Tab({ Title = "Settings", Icon = "settings",Border = true})
 
-
---DisplayElements
 DisplayElements:Section({Title = "Section"})
 DisplayElements:Paragraph({
     Title = "Paragraph",
@@ -68,7 +75,7 @@ DisplayElements:Paragraph({
     Title = "Paragraph Thumbnail",
     Desc = "This is a Paragraph",
     Thumbnail = "rbxassetid://78903626783621",
-    Icon = "bird"
+    Icon = "solar:lock-keyhole-unlocked-broken"
 })
 DisplayElements:Section({Title = "Color Paragraph", Icon = "paintbrush"})
 local Colors = {"Red", "Coral", "Orange", "Yellow", "Green", "Mint", "Cyan", "Blue", "Purple", "Pink"}
@@ -89,9 +96,9 @@ ManagementTab:Button({
 ManagementTab:Button({
     Title = "Test Text Icon <bird> bebebe",
     Desc = "This is a button <bird> bebebe",
-    Callback = function()
-        print("Button Clicked")
-    end
+    Callback = Utility:Debounce(function()
+        print("bebebe")
+    end, 10)
 })
 ManagementTab:Toggle({
     Title = "Toggle <toggle-left>",
@@ -268,12 +275,30 @@ LockedTab:Toggle({
     end
 })
 
+GroupTab:Section({Title = "Group"})
+local grid = GroupTab:Group({})
+grid:Toggle({ Title = "One Element", Callback = function(v) print(v) end })
+local grid = GroupTab:Group({})
+grid:Toggle({ Title = "Aimbot", Callback = function(v) print(v) end })
+grid:Toggle({ Title = "Triggerbot", Callback = function(v) print(v) end })
+local grid = GroupTab:Group({})
+grid:Toggle({ Title = "Test", Callback = function(v) print(v) end })
+grid:Toggle({ Title = "Test", Callback = function(v) print(v) end })
+grid:Toggle({ Title = "Test", Callback = function(v) print(v) end })
+
+GroupTab:Section({Title = "Locked"})
+local grid = GroupTab:Group({})
+grid:Toggle({ Title = "Toggle", Locked = true,Callback = function(v) print(v) end })
+grid:Toggle({ Title = "Toggle", Locked = true,Callback = function(v) print(v) end })
+local grid = GroupTab:Group({})
+grid:Toggle({ Title = "Toggle", Locked = true,Callback = function(v) print(v) end })
+grid:Toggle({ Title = "Toggle", Locked = false,Callback = function(v) print(v) end })
 
 
 Settings:Section({Title = "Window"})
 Settings:Dropdown({
 	Title = "Theme",
-	Option = {"Dark","Light", "Forest"},
+	Option = {"Dark","Light","Forest","Amethyst"},
 	Value = "Dark",
 	Callback = function(Value)
 		Window:SetTheme(Value)
@@ -316,4 +341,4 @@ Settings:Button({
     Callback = function()
         Window:Destroy()
     end
-})
+})--]]
