@@ -657,8 +657,7 @@ local Tab = Section:Tab({Title = "Tab"})`)}
     title: "Group",
     subtitle: "A container for elements.",
     html: `
-      ${code("lua", `local Group = Tab:Group({})
-local group = GroupTab:Group({})
+      ${code("lua", `local group = Tab:Group({})
 group:Toggle({ Title = "Toggle 1", Callback = function(v) print(v) end })
 group:Toggle({ Title = "Toggle 2", Callback = function(v) print(v) end })`)}
     `
