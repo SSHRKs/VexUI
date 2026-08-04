@@ -88,9 +88,9 @@ ManagementTab:Button({
 ManagementTab:Button({
     Title = "Test Text Icon <bird> bebebe",
     Desc = "This is a button <bird> bebebe",
-    Callback = function()
-        print("Click")
-    end
+    Callback = Utility:Debounce(function()
+        print("bebebe")
+    end, 10)
 })
 ManagementTab:Toggle({
     Title = "Toggle <toggle-left>",
@@ -307,7 +307,15 @@ Settings:Toggle({
         Window:SetTransparency(Value)
     end
 })
-Settings:Keybind({
+local Settings1 = Settings:Group({})
+Settings1:Toggle({
+    Title = "Resizing",
+    Default = true,
+    Callback = function(Value)
+        Window:SetResizable(Value)
+    end
+})
+Settings1:Keybind({
     Title = "Toggle Key Window",
     Callback = function(key)
         Window:SetToggleKey(Enum.KeyCode[key])
@@ -327,10 +335,49 @@ Settings:Toggle({
     end
 })
 
+local n1 = 0
+local n2 = 0
+Settings:Section({Title = "Window Size"})
+Settings:Slider({
+    Title = "X",
+    Value = {
+        Min = 410,
+        Max = 700,
+        Default = 480,
+    },
+    Step = 1,
+    Callback = function(Value)
+        n1 = Value
+    end
+})
+Settings:Slider({
+    Title = "Z",
+    Value = {
+        Min = 280,
+        Max = 700,
+        Default = 360,
+    },
+    Step = 1,
+    Callback = function(Value)
+        n2 = Value
+    end
+})
+Settings:Button({
+    Title = "Apply",
+    Callback = function()
+        Window:Resize(n1,n2)
+    end
+})
 Settings:Section({Title = "Other"})
+Settings:Button({
+    Title = "To Center",
+    Callback = function()
+        Window:ToCenter()
+    end
+})
 Settings:Button({
     Title = "Destroy UI",
     Callback = function()
         Window:Destroy()
     end
-})--]]
+})
