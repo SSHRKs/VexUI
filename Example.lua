@@ -335,8 +335,7 @@ Settings:Toggle({
     end
 })
 
-local n1 = 0
-local n2 = 0
+local n1,n2 = 0,0
 Settings:Section({Title = "Window Size"})
 Settings:Slider({
     Title = "X",
