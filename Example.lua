@@ -97,9 +97,9 @@ ManagementTab:Button({
 ManagementTab:Button({
     Title = "Test Text Icon <bird> bebebe",
     Desc = "This is a button <bird> bebebe",
-    Callback = Utility:Debounce(function()
-        print("bebebe")
-    end, 10)
+    Callback = function()
+        print("Click")
+    end
 })
 ManagementTab:Toggle({
     Title = "Toggle <toggle-left>",
