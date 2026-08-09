@@ -10,6 +10,14 @@ local Window = VexUI:CreateWindow({
         Enabled = true,
         Anonymous = true,
     },
+    KeySystem = {
+        Title = "VexUI Example",
+        Desc = "This is an example of a key system using VexUI. \nKey: 1234 <key-round>",
+        KeyValidator = function(key)
+            return key == "1234"
+        end,
+        URL = "1234",
+    },
 })
 
 Window:EditOpenButton({
@@ -51,6 +59,7 @@ local GroupTab = Window:Tab({Title = "Group", Icon = "group",Border = true,})
 Window:SelectTab(1)
 local Section = Window:Section({ Title = "Other", Icon = "hash" })
 local Settings = Section:Tab({ Title = "Settings", Icon = "settings",Border = true})
+local VTab = Section:Tab({ Title = "V 1.0.9", Icon = "settings",Border = true})
 
 DisplayElements:Section({Title = "Section"})
 DisplayElements:Paragraph({
@@ -88,9 +97,9 @@ ManagementTab:Button({
 ManagementTab:Button({
     Title = "Test Text Icon <bird> bebebe",
     Desc = "This is a button <bird> bebebe",
-    Callback = function()
-        print("Click")
-    end
+    Callback = Utility:Debounce(function()
+        print("bebebe")
+    end, 10)
 })
 ManagementTab:Toggle({
     Title = "Toggle <toggle-left>",
@@ -335,7 +344,8 @@ Settings:Toggle({
     end
 })
 
-local n1,n2 = 0,0
+local n1 = 0
+local n2 = 0
 Settings:Section({Title = "Window Size"})
 Settings:Slider({
     Title = "X",
@@ -378,5 +388,66 @@ Settings:Button({
     Title = "Destroy UI",
     Callback = function()
         Window:Destroy()
+    end
+})
+
+VTab:Section({Title = ":SetMax, :SetMin. Slider"})
+local bebebe = VTab:Slider({
+    Title = "Slider",
+    Value = {
+        Min = 1,
+        Max = 1000,
+        Default = 360,
+    },
+    Step = 1,
+    Callback = function(Value)
+        n2 = Value
+    end
+})
+VTab:Slider({
+    Title = "Set Max",
+    Value = {
+        Min = 1,
+        Max = 1000,
+        Default = 360,
+    },
+    Step = 1,
+    Callback = function(Value)
+        bebebe:SetMax(Value)
+    end
+})
+VTab:Slider({
+    Title = "Set Min",
+    Value = {
+        Min = 1,
+        Max = 1000,
+        Default = 360,
+    },
+    Step = 1,
+    Callback = function(Value)
+        bebebe:SetMin(Value)
+    end
+})
+VTab:Section({Title = "Window Transparency"})
+VTab:Slider({
+    Title = "Set Transparency",
+    Value = {
+        Min = 0.1,
+        Max = 0.9,
+        Default = 0.4,
+    },
+    Step = 0.1,
+    Callback = function(Value)
+        Window:SetTransparency(Value)
+    end
+})
+local Button
+Button = VTab:Button({
+    Title = "Get Transparency",
+    Callback = function()
+        VexUI:Notification({
+            Title = "Transparency: "..Window:GetTransparency(),
+            Duration = 5
+        })
     end
 })
