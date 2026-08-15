@@ -391,63 +391,42 @@ Settings:Button({
     end
 })
 
-VTab:Section({Title = ":SetMax, :SetMin. Slider"})
-local bebebe = VTab:Slider({
+local Section = VTab:Section({Title = "Section", Default = true})
+Section:Paragraph({
+    Title = "Paragraph",
+})
+Section:Button({
+    Title = "Button",
+})
+Section:Toggle({
+    Title = "Toggle",
+})
+local Section = VTab:Section({Title = "Paragraph IconSize", Default = true})
+Section:Paragraph({
+    Title = "Paragraph",
+    Desc = "Size: 15",
+    Icon = "bird",
+    IconSize = 15
+})
+local Section = VTab:Section({Title = "Slider Width", Default = true})
+Section:Slider({
     Title = "Slider",
-    Value = {
-        Min = 1,
-        Max = 1000,
-        Default = 360,
-    },
-    Step = 1,
-    Callback = function(Value)
-        n2 = Value
-    end
+    Desc = "Width: 50",
+    Width = 50
 })
-VTab:Slider({
-    Title = "Set Max",
-    Value = {
-        Min = 1,
-        Max = 1000,
-        Default = 360,
-    },
-    Step = 1,
-    Callback = function(Value)
-        bebebe:SetMax(Value)
-    end
+Section:Slider({
+    Title = "Slider",
+    Desc = "Width: 90",
+    Width = 90
 })
-VTab:Slider({
-    Title = "Set Min",
-    Value = {
-        Min = 1,
-        Max = 1000,
-        Default = 360,
-    },
-    Step = 1,
-    Callback = function(Value)
-        bebebe:SetMin(Value)
-    end
+local Group = Section:Group({})
+Group:Slider({
+    Title = "Slider",
+    Desc = "Width: 30",
+    Width = 30
 })
-VTab:Section({Title = "Window Transparency"})
-VTab:Slider({
-    Title = "Set Transparency",
-    Value = {
-        Min = 0.1,
-        Max = 0.9,
-        Default = 0.4,
-    },
-    Step = 0.1,
-    Callback = function(Value)
-        Window:SetTransparency(Value)
-    end
-})
-local Button
-Button = VTab:Button({
-    Title = "Get Transparency",
-    Callback = function()
-        VexUI:Notification({
-            Title = "Transparency: "..Window:GetTransparency(),
-            Duration = 5
-        })
-    end
+Group:Slider({
+    Title = "Slider",
+    Desc = "Width: 30",
+    Width = 30
 })
