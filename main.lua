@@ -5,33 +5,6 @@ function Utility:TweenObject(obj, properties, duration, ...)
     TweenService:Create(obj, TweenInfo.new(duration, ...), properties):Play() 
 end
 
-function Utility:Debounce(fn, cooldown)
-    local locked = false
-    return function(...)
-        if locked then return end
-        locked = true
-        local args = {...}
-        local ok, err = pcall(fn, unpack(args))
-        if not ok then warn("[Debounce] " .. tostring(err)) end
-        task.delay(cooldown, function() locked = false end)
-    end
-end
-
-function Utility:GetNearest(origin, list, getPositionFn)
-    getPositionFn = getPositionFn or function(item) return item.Position end
-    local nearest, nearestDist = nil, math.huge
-    for _, item in ipairs(list) do
-        local ok, pos = pcall(getPositionFn, item)
-        if ok and pos then
-            local dist = (origin - pos).Magnitude
-            if dist < nearestDist then
-                nearest, nearestDist = item, dist
-            end
-        end
-    end
-    return nearest, nearestDist
-end
-
 local activeNotifs = 0
 local UI, VexUI = {
     Theme = nil,
@@ -634,6 +607,7 @@ function UI:CreateWindow(Config)
             0, math.clamp(Config.Size.Y.Offset, 280, 450)
         ) or UDim2.new(0, 480, 0, 360),
         SideBarWidth = Config.SideBarWidth or 160,
+        TransparencyNum = Config.TransparencyNum or 0,
         User = Config.User or {},
         Tabs = {},
         AllElements = {},
@@ -2341,8 +2315,8 @@ function UI:CreateWindow(Config)
         BackgroundTransparency = 1,
         BorderColor3 = Color3.fromRGB(0, 0, 0),
         BorderSizePixel = 0,
-        Position = UDim2.new(0, 0, 0., 0),
-        Size = UDim2.new(1, 0, 1, -10),
+        Position = UDim2.new(0, 0, 0, 8),
+        Size = UDim2.new(1, 0, 1, -50),
         ScrollBarThickness = 0
     },{
         VexUI:Create("UIListLayout", {
@@ -2352,7 +2326,7 @@ function UI:CreateWindow(Config)
         VexUI:Create("UIPadding", {
             PaddingLeft = UDim.new(0, 5),
             PaddingRight = UDim.new(0, 5),
-            PaddingTop = UDim.new(0, 10),
+            --PaddingTop = UDim.new(0, 10),
         })
     })
     LeftScroll.UIListLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
@@ -2573,6 +2547,7 @@ function UI:CreateWindow(Config)
                 Title = Config.Title or "Paragraph",
                 Desc = Config.Desc or nil,
                 Icon = Config.Icon or nil,
+                IconSize = Config.IconSize or 22,
                 Color = Config.Color,
                 Thumbnail = Config.Thumbnail,
                 ThumbnailPos = Config.ThumbnailPos or "Up",
@@ -2752,7 +2727,7 @@ function UI:CreateWindow(Config)
                     BackgroundTransparency = 1,
                     Position = UDim2.new(0, 5, 0.5, 0),
                     BorderColor3 = Color3.new(0, 0, 0),
-                    Size = UDim2.new(0, 22, 0, 22),
+                    Size = UDim2.new(0, Paragraph.IconSize, 0, Paragraph.IconSize),
                     ZIndex = 17,
                     Parent = ParagraphFrame.Frame,
                     ImageTransparency = 0,
@@ -2992,6 +2967,7 @@ function UI:CreateWindow(Config)
                 Value = Config.Value or { Min = 0, Max = 100, Default = 50 },
                 Callback = Config.Callback or function() end,
                 Locked = Config.Locked,
+                Width = Config.Width or 110,
                 SizeY = Config.SizeY or 40,
             }
             local Beeee, SliderElement, Inner = Utility:Element(RightScroll, ElementFrame, Slider.SizeY, "Slider")
@@ -3019,7 +2995,7 @@ function UI:CreateWindow(Config)
                 Position = UDim2.new(0.96, -40, 0.5, 0),
                 ClipsDescendants = true,
                 BackgroundTransparency = 0.5,
-                Size = UDim2.new(0, 110, 0, 16),
+                Size = UDim2.new(0, Slider.Width, 0, 16),
                 BorderSizePixel = 0,
                 ZIndex = 15,
                 ThemeID = {
@@ -3192,29 +3168,20 @@ function UI:CreateWindow(Config)
                     local roundedValue = math.round(clampedValue / Slider.Step) * Slider.Step
                     Value = roundedValue
                     BGBox.Text = tostring(Value)
-                    DropValue.Size = UDim2.new(
-                        (roundedValue - Slider.Value.Min) / (Slider.Value.Max - Slider.Value.Min),
-                        0, 1, 0
-                    )
+                    DropValue.Size = UDim2.new((roundedValue - Slider.Value.Min) / (Slider.Value.Max - Slider.Value.Min),0, 1, 0)
                     task.spawn(Slider.Callback, roundedValue)
                 end
             end)
 
             local clampedDefault = math.clamp(Slider.Value.Default, Slider.Value.Min, Slider.Value.Max)
             Value = clampedDefault
-            DropValue.Size = UDim2.new(
-                (clampedDefault - Slider.Value.Min) / (Slider.Value.Max - Slider.Value.Min),
-                0, 1, 0
-            )
+            DropValue.Size = UDim2.new((clampedDefault - Slider.Value.Min) / (Slider.Value.Max - Slider.Value.Min),0, 1, 0)
             BGBox.Text = tostring(clampedDefault)
             task.spawn(Slider.Callback, clampedDefault)
 
             SliderTRG.InputBegan:Connect(function(input)
                 if Slider.Locked then return end
-                if not isFocusing and not HoldingSlider and (
-                    input.UserInputType == Enum.UserInputType.MouseButton1 or
-                    input.UserInputType == Enum.UserInputType.Touch
-                ) then
+                if not isFocusing and not HoldingSlider and (input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch) then
                     isTouch = (input.UserInputType == Enum.UserInputType.Touch)
                     HoldingSlider = true
 
@@ -3281,7 +3248,15 @@ function UI:CreateWindow(Config)
                 Desc.Frame.Visible = true
                 Desc.SetText(val)
             end
-
+            function Slider:SetMax(val)
+                Slider.Value.Max = val
+            end
+            function Slider:SetMin(val)
+                Slider.Value.Min = val
+            end
+            function Slider:SetStep(val)
+                Slider.Value.Step = val
+            end
             function Slider:Close()
                 Beeee:Destroy()
             end
@@ -4005,11 +3980,13 @@ function UI:CreateWindow(Config)
                 Size = UDim2.new(1, -7, 0, Value or 2),
             })
         end
+        
         function Tab:Section(Config)
             local Section = {
                 Title = Config.Title or "Section",
                 Icon = Config.Icon,
                 TextSize = Config.TextSize or 18,
+                Default = Config.Default == nil and true or Config.Default,
                 UIPadding = Config.UIPadding or UDim.new(0, 0),
             }
             local SectionElement = VexUI:Create("Frame", {
@@ -4019,6 +3996,7 @@ function UI:CreateWindow(Config)
                 BorderColor3 = Color3.new(0, 0, 0),
                 ZIndex = 20,
                 Position = UDim2.new(0, 0, 0.3038, 0),
+                AutomaticSize = Enum.AutomaticSize.Y,
                 Size = UDim2.new(0, ElementFrame.Size.X.Offset - 10, 0, 30),
             })
 
@@ -4027,7 +4005,7 @@ function UI:CreateWindow(Config)
                 BackgroundTransparency = 1,
                 RichText = true,
                 Position = UDim2.new(0, 0, 0, 0),
-                Size = UDim2.new(1, 0, 1, 0),
+                Size = UDim2.new(1, 0, 0, 30),
                 FontFace = Font.new([[rbxassetid://12187365364]], Enum.FontWeight.SemiBold, Enum.FontStyle.Normal),
                 Text = Section.Title,
                 TextSize = Section.TextSize,
@@ -4044,26 +4022,108 @@ function UI:CreateWindow(Config)
 
             local Icon
             if Section.Icon then
-            SectionLabel.UIPadding.PaddingLeft = Section.UIPadding + UDim.new(0, 22)
-                local Icon = VexUI:Create("ImageLabel", {
+                SectionLabel.UIPadding.PaddingLeft = Section.UIPadding + UDim.new(0, 22)
+                Icon = VexUI:Create("ImageLabel", {
                     AnchorPoint = Vector2.new(0, 0.5),
-                    --Image = IconsV2.GetIcon(Window.Icon),
                     BackgroundTransparency = 1,
                     Position = UDim2.new(0, 0, 0.5, 0),
                     Size = UDim2.new(0, 20, 0, 20),
                     ZIndex = 20,
-                    Parent = SectionElement,
+                    Parent = SectionLabel,
                     ThemeID = {
                         ImageColor3 = "Section.Icon|IconColor"
                     }
                 })
-                if Section.Icon and IconsV2.Icon(Section.Icon) then
+                if IconsV2.Icon(Section.Icon) then
                     Icon.Image = IconsV2.GetIcon(Section.Icon)
-                elseif Section.Icon and string.find(Section.Icon, "rbxassetid://") then
+                elseif string.find(Section.Icon, "rbxassetid://") then
                     Icon.Image = SectionIcon
                 end
             end
 
+            local SectionContainer = VexUI:Create("Frame", {
+                Parent = SectionElement,
+                Name = "Container",
+                BackgroundTransparency = 1,
+                ClipsDescendants = true,
+                Position = UDim2.new(0, 0, 0, 30),
+                Size = UDim2.new(1, 0, 0, 0),
+                AutomaticSize = Enum.AutomaticSize.Y,
+                ZIndex = 20,
+            }, {
+                VexUI:Create("UIListLayout", {
+                    FillDirection = Enum.FillDirection.Vertical,
+                    SortOrder = Enum.SortOrder.LayoutOrder,
+                    Padding = UDim.new(0, 5),
+                }),
+                VexUI:Create("UIPadding", {
+                    PaddingTop = UDim.new(0, 5),
+                })
+            })
+
+            local Val = Section.Default
+            local Height = 0
+            local Elements = 0
+
+            local Arrow = VexUI:Create("ImageLabel", {
+                AnchorPoint = Vector2.new(1, 0.5),
+                Image = IconsV2.GetIcon("chevron-down"),
+                BackgroundTransparency = 1,
+                Position = UDim2.new(1, -5, 0.5, 0),
+                Size = UDim2.new(0, 16, 0, 16),
+                Rotation = -180,
+                ZIndex = 20,
+                Parent = SectionLabel,
+                Visible = false,
+                ThemeID = {
+                    ImageColor3 = "Section.Icon|IconColor"
+                }
+            })
+
+            local SectionTRG = VexUI:Create("TextButton", {
+                Parent = SectionElement,
+                BackgroundTransparency = 1,
+                Text = "",
+                Size = UDim2.new(1, 0, 0, 30),
+                Position = UDim2.new(0, 0, 0, 0),
+                ZIndex = 21,
+                Visible = false,
+            })
+
+            local Layout = SectionContainer:FindFirstChildOfClass("UIListLayout")
+
+            function Section:Toggle(i)
+                if Elements == 0 then return end
+                if not i then
+                    Height = Layout.AbsoluteContentSize.Y + 5
+                    SectionContainer.Size = UDim2.new(1, 0, 0, SectionContainer.AbsoluteSize.Y)
+                    SectionElement.Size = UDim2.new(0, SectionElement.AbsoluteSize.X, 0, SectionElement.AbsoluteSize.Y)
+                    SectionContainer.AutomaticSize = Enum.AutomaticSize.None
+                    SectionElement.AutomaticSize = Enum.AutomaticSize.None
+                    Utility:TweenObject(SectionContainer, {Size = UDim2.new(1, 0, 0, 0)}, 0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+                    Utility:TweenObject(SectionElement, {Size = UDim2.new(0, SectionElement.Size.X.Offset, 0, 30)}, 0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+                    if Arrow then
+                        Utility:TweenObject(Arrow, {Rotation = 0}, 0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+                    end
+                else
+                    Utility:TweenObject(SectionContainer, {Size = UDim2.new(1, 0, 0, Height)}, 0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+                    Utility:TweenObject(SectionElement, {Size = UDim2.new(0, SectionElement.Size.X.Offset, 0, 30 + Height)}, 0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+                    if Arrow then
+                        Utility:TweenObject(Arrow, {Rotation = -180}, 0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+                    end
+                end
+            end
+
+            SectionTRG.MouseButton1Click:Connect(function()
+                Val = not Val
+                Section:Toggle(Val)
+            end)
+
+            if not Section.Default then
+                task.defer(function()
+                    Section:Toggle(false)
+                end)
+            end
             function Section:Close()
                 SectionElement:Destroy()
             end
@@ -4074,6 +4134,24 @@ function UI:CreateWindow(Config)
             function Section:SetTextSize(V)
                 SectionLabel.TextSize = V
             end
+            setmetatable(Section, {
+                __index = function(_, methodName)
+                    return function(_, ItemConfig)
+                        local Element = Tab[methodName](Tab, ItemConfig)
+                        Window.SearchIndex[#Window.SearchIndex].Frame.Parent = SectionContainer
+                        Elements += 1
+                        if Elements == 1 then
+                            Arrow.Visible = true
+                            SectionContainer.Visible = true
+                            SectionTRG.Visible = true
+                            if not Section.Default then
+                                task.defer(function() Section:Toggle(false) end)
+                            end
+                        end
+                        return Element
+                    end
+                end
+            })
             return Section
         end
         function Window:UserEnabled(Value)
@@ -4082,7 +4160,7 @@ function UI:CreateWindow(Config)
             Utility:TweenObject(UserSub, {TextTransparency = Value and 0.6 or 1}, 0.2)
             Utility:TweenObject(UserFrame.ImageLabel, {ImageTransparency = Value and 0 or 1,BackgroundTransparency = Value and 0 or 1}, 0.2)
             UserFrame.Visible = Value
-            LeftScroll.Size = UDim2.new(0, Window.SideBarWidth, 1, Value and -50 or 0)
+            LeftScroll.Size = UDim2.new(0, Window.SideBarWidth, 1, Value and -50 or -20)
         end
         function Window:Anonymous(Value)
             UserTitle.Text = Value and "Anonymous" or game.Players.LocalPlayer.DisplayName
@@ -4112,6 +4190,7 @@ function UI:CreateWindow(Config)
             })
 
             local CellScale, CellOffset
+            table.insert(Window.SearchIndex, { Frame = GroupFrame })
 
             local function Size()
                 local count = 0
@@ -4282,7 +4361,7 @@ function UI:CreateWindow(Config)
         Utility:TweenObject(TabFrame, {Size = UDim2.new(0, Window.SideBarWidth, 0, Window.Size.Y.Offset - Window.Topbar.Height - 10)}, 0.3, Enum.EasingStyle.Back, Enum.EasingDirection.Out)
         Utility:TweenObject(TabFrame, {BackgroundTransparency = 0}, 0.3, Enum.EasingStyle.Back, Enum.EasingDirection.Out)
         --Utility:TweenObject(TabFrame.Frame, {BackgroundTransparency = 0}, 0.3, Enum.EasingStyle.Back, Enum.EasingDirection.Out)
-        Utility:TweenObject(LeftScroll, {Size = UDim2.new(1, 0, 1, 0)}, 0.3, Enum.EasingStyle.Back, Enum.EasingDirection.Out)
+        Utility:TweenObject(LeftScroll, {Size = UDim2.new(0, Window.SideBarWidth, 1, UserFrame.Visible and -50 or -20)}, 0.3, Enum.EasingStyle.Back, Enum.EasingDirection.Out)
         Utility:TweenObject(Main.Frame, {Size = UDim2.new(0, Window.Size.X.Offset - 182 + 133 + 5, 0, Window.Topbar.Height)}, 0.3, Enum.EasingStyle.Back, Enum.EasingDirection.Out) --0, Window.Size.X.Offset, 0, Window.Size.Y.Offset-8
         Main.Frame.Visible = true
         Utility:TweenObject(Main, {Size = UDim2.new(0, Window.Size.X.Offset, 0, Window.Size.Y.Offset)}, 0.3, Enum.EasingStyle.Back, Enum.EasingDirection.Out) --UDim2.new(0, Window.Size.X.Offset, 0, Window.Size.Y.Offset)
@@ -4308,7 +4387,7 @@ function UI:CreateWindow(Config)
         Utility:TweenObject(TabFrame, {Size = UDim2.new(0, Window.SideBarWidth, 0, 0)}, 0.3, Enum.EasingStyle.Linear, Enum.EasingDirection.Out)
         Utility:TweenObject(TabFrame, {BackgroundTransparency = 1}, 0.3, Enum.EasingStyle.Linear, Enum.EasingDirection.Out)
         --Utility:TweenObject(TabFrame.Frame, {BackgroundTransparency = 1}, 0.3, Enum.EasingStyle.Linear, Enum.EasingDirection.Out)
-        Utility:TweenObject(LeftScroll, {Size = UDim2.new(1, 0, 0, 0)}, 0.3, Enum.EasingStyle.Linear, Enum.EasingDirection.Out)
+        Utility:TweenObject(LeftScroll, {Size = UDim2.new(1, 0, 0, -20)}, 0.3, Enum.EasingStyle.Linear, Enum.EasingDirection.Out)
         Utility:TweenObject(Main.Frame, {Size = UDim2.new(0, Window.Size.X.Offset, 0, 0)}, 0.3, Enum.EasingStyle.Linear, Enum.EasingDirection.Out) --0, Window.Size.X.Offset, 0, Window.Size.Y.Offset-8
         Main.Frame.Visible = false
         Utility:TweenObject(Main, {Size = UDim2.new(0, Window.Size.X.Offset, 0, 0)}, 0.3, Enum.EasingStyle.Linear, Enum.EasingDirection.Out) --UDim2.new(0, Window.Size.X.Offset, 0, Window.Size.Y.Offset)
@@ -4346,7 +4425,7 @@ function UI:CreateWindow(Config)
         Utility:TweenObject(TabFrame, {Size = UDim2.new(0, Window.SideBarWidth, 0, 0)}, 0.3, Enum.EasingStyle.Linear, Enum.EasingDirection.Out)
         Utility:TweenObject(TabFrame, {BackgroundTransparency = 1}, 0.3, Enum.EasingStyle.Linear, Enum.EasingDirection.Out)
         Utility:TweenObject(TabFrame.Frame, {BackgroundTransparency = 1}, 0.3, Enum.EasingStyle.Linear, Enum.EasingDirection.Out)
-        Utility:TweenObject(LeftScroll, {Size = UDim2.new(1, 0, 0, 0)}, 0.3, Enum.EasingStyle.Linear, Enum.EasingDirection.Out)
+        Utility:TweenObject(LeftScroll, {Size = UDim2.new(1, 0, 0, -20)}, 0.3, Enum.EasingStyle.Linear, Enum.EasingDirection.Out)
         Utility:TweenObject(Main.Frame, {Size = UDim2.new(0, Window.Size.X.Offset, 0, 0)}, 0.3, Enum.EasingStyle.Linear, Enum.EasingDirection.Out) --0, Window.Size.X.Offset, 0, Window.Size.Y.Offset-8
         Main.Frame.Visible = false
         Utility:TweenObject(Main, {Size = UDim2.new(0, Window.Size.X.Offset, 0, 0)}, 0.3, Enum.EasingStyle.Linear, Enum.EasingDirection.Out) --UDim2.new(0, Window.Size.X.Offset, 0, Window.Size.Y.Offset)
@@ -4360,7 +4439,7 @@ function UI:CreateWindow(Config)
         Utility:TweenObject(TabFrame, {Size = UDim2.new(0, Window.SideBarWidth, 0, 0)}, 0.3, Enum.EasingStyle.Linear, Enum.EasingDirection.Out)
         Utility:TweenObject(TabFrame, {BackgroundTransparency = 1}, 0.3, Enum.EasingStyle.Linear, Enum.EasingDirection.Out)
         Utility:TweenObject(TabFrame.Frame, {BackgroundTransparency = 1}, 0.3, Enum.EasingStyle.Linear, Enum.EasingDirection.Out)
-        Utility:TweenObject(LeftScroll, {Size = UDim2.new(1, 0, 0, 0)}, 0.3, Enum.EasingStyle.Linear, Enum.EasingDirection.Out)
+        Utility:TweenObject(LeftScroll, {Size = UDim2.new(1, 0, 0, -20)}, 0.3, Enum.EasingStyle.Linear, Enum.EasingDirection.Out)
         Utility:TweenObject(Main.Frame, {Size = UDim2.new(0, Window.Size.X.Offset, 0, 0)}, 0.3, Enum.EasingStyle.Linear, Enum.EasingDirection.Out) --0, Window.Size.X.Offset, 0, Window.Size.Y.Offset-8
         Main.Frame.Visible = false
         Utility:TweenObject(Main, {Size = UDim2.new(0, Window.Size.X.Offset, 0, 0)}, 0.3, Enum.EasingStyle.Linear, Enum.EasingDirection.Out) --UDim2.new(0, Window.Size.X.Offset, 0, Window.Size.Y.Offset)
@@ -4400,10 +4479,22 @@ function UI:CreateWindow(Config)
     end
 
     function Window:SetTransparency(Value)
-        Utility:TweenObject(Main, {Transparency = Value and 0.1 or 0}, 0.1, Enum.EasingStyle.Linear, Enum.EasingDirection.Out)
-        Utility:TweenObject(TabFrame, {Transparency = Value and 1 or 0}, 0.1, Enum.EasingStyle.Linear, Enum.EasingDirection.Out)
-        Utility:TweenObject(TabFrame.Frame, {Transparency = Value and 1 or 0}, 0.1, Enum.EasingStyle.Linear, Enum.EasingDirection.Out)
+        if typeof(Value) == "boolean" then
+            Utility:TweenObject(Main, { Transparency = Value and 0.1 or 0}, 0.1, Enum.EasingStyle.Linear, Enum.EasingDirection.Out)
+            Utility:TweenObject(TabFrame, { Transparency = tabTransparency }, 0.1, Enum.EasingStyle.Linear, Enum.EasingDirection.Out)
+            Utility:TweenObject(TabFrame.Frame, { Transparency = tabTransparency }, 0.1, Enum.EasingStyle.Linear, Enum.EasingDirection.Out)
+        elseif typeof(Value) == "number" then
+            Utility:TweenObject(Main, { Transparency = Value}, 0.1, Enum.EasingStyle.Linear, Enum.EasingDirection.Out)
+            Utility:TweenObject(TabFrame, { Transparency = tabTransparency }, 0.1, Enum.EasingStyle.Linear, Enum.EasingDirection.Out)
+            Utility:TweenObject(TabFrame.Frame, { Transparency = tabTransparency }, 0.1, Enum.EasingStyle.Linear, Enum.EasingDirection.Out)
+        else
+            return Window
+        end
+        Window.TransparencyNum = Main.BackgroundTransparency
         return Window
+    end
+    function Window:GetTransparency()
+        return Main.Transparency
     end
 
     function Window:GetTheme()
@@ -4435,8 +4526,7 @@ function UI:CreateWindow(Config)
     end
 
     function Window:Resize(sizeX, sizeY)
-        sizeX = math.clamp(sizeX, 410, 900)
-        sizeY = math.clamp(sizeY, 280, 700)
+        sizeX, sizeY = math.clamp(sizeX, 410, 900), math.clamp(sizeY, 280, 700)
         local TagFrame = Main:FindFirstChild("TagFrame")
         Window.Size = UDim2.new(0, sizeX, 0, sizeY)
 
@@ -4444,28 +4534,32 @@ function UI:CreateWindow(Config)
         Utility:TweenObject(Main.Frame, {Size = UDim2.new(0, sizeX, 0, sizeY - 8)}, 0.3, Enum.EasingStyle.Back, Enum.EasingDirection.Out)
         Utility:TweenObject(TopBarF1, {Size = UDim2.new(0, sizeX - 20 - TopBarF2.Size.X.Offset - 187, 0, Window.Topbar.Height)}, 0.3, Enum.EasingStyle.Back, Enum.EasingDirection.Out)
         Utility:TweenObject(TabFrame, {Size = UDim2.new(0, Window.SideBarWidth, 0, sizeY - Window.Topbar.Height - 13)}, 0.3, Enum.EasingStyle.Back, Enum.EasingDirection.Out)
-        --Main.Size = UDim2.new(0, sizeX, 0, sizeY)
-        --Main.Frame.Size = UDim2.new(0, sizeX, 0, sizeY - 8)
-        --TopBarF1.Size = UDim2.new(0, sizeX - 20 - TopBarF2.Size.X.Offset - 187, 0, Window.Topbar.Height)
-        --TabFrame.Size = UDim2.new(0, Window.SideBarWidth, 0, sizeY - Window.Topbar.Height - 13)
+
+        local function Resize(container, w)
+            for _, i in ipairs(container:GetChildren()) do
+                if i:IsA("Frame") then
+                    i.Size = UDim2.new(0, w, 0, i.Size.Y.Offset)
+                    local c = i:FindFirstChild("Container")
+                    if c then Resize(c, w) end
+                end
+            end
+        end
 
         for _, EF in ipairs(ElementFolder:GetChildren()) do
             if EF:IsA("Frame") then
                 EF.Size = UDim2.new(0, sizeX - Window.SideBarWidth - 8, 0, (Window.ActiveElementFrame == EF) and sizeY - Window.Topbar.Height - 20 - (Tags > 0 and 37 or 0) or EF.Size.Y.Offset)
                 local Scroll = EF:FindFirstChildOfClass("ScrollingFrame")
-                if Scroll then
-                    for _, item in ipairs(Scroll:GetChildren()) do
-                        if item:IsA("Frame") then
-                            item.Size = UDim2.new(0, sizeX - Window.SideBarWidth - 8 - 10, 0, item.Size.Y.Offset)
-                        end
-                    end
-                end
+                if Scroll then Resize(Scroll, sizeX - Window.SideBarWidth - 18) end
             end
         end
+
         if TagFrame then
             TagFrame.Size = UDim2.new(0, sizeX - Window.SideBarWidth - 8, 0, 35)
             TagFrame.Position = UDim2.new(.97, 0, 1, -5)
         end
+    end
+    function Window:GetWindowSize()
+        return Main.Size.X.Offset, Main.Size.Y.Offset
     end
     
     local ResizeHandle = VexUI:Create("Frame", {
@@ -4793,11 +4887,6 @@ VexUI:CreateTopbarToggle({
     end
 })
 
-Window:Tag({
-    Name = "Version 1.0.6",
-    Color = Color3.fromRGB(255, 45, 85)
-})
-
 local DisplayElements = Window:Tab({Title = "Display Elements",Icon = "picture-in-picture",Border = true,})
 local ManagementTab = Window:Tab({Title = "Management", Icon = "chart-no-axes-gantt",Border = true,})
 local InputTab = Window:Tab({Title = "Input Elements", Icon = "file-input",Border = true,})
@@ -4807,8 +4896,9 @@ local GroupTab = Window:Tab({Title = "Group", Icon = "group",Border = true,})
 Window:SelectTab(1)
 local Section = Window:Section({ Title = "Other", Icon = "hash" })
 local Settings = Section:Tab({ Title = "Settings", Icon = "settings",Border = true})
+local VTab = Section:Tab({ Title = "V 1.1.0", Icon = "settings",Border = true})
 
-DisplayElements:Section({Title = "Section"})
+local Section = DisplayElements:Section({Title = "Section", Default = false})
 DisplayElements:Paragraph({
     Title = "Paragraph",
     Desc = "This is a Paragraph",
@@ -4844,9 +4934,6 @@ ManagementTab:Button({
 ManagementTab:Button({
     Title = "Test Text Icon <bird> bebebe",
     Desc = "This is a button <bird> bebebe",
-    Callback = Utility:Debounce(function()
-        print("bebebe")
-    end, 10)
 })
 ManagementTab:Toggle({
     Title = "Toggle <toggle-left>",
@@ -5136,5 +5223,45 @@ Settings:Button({
     Callback = function()
         Window:Destroy()
     end
+})
+
+local Section = VTab:Section({Title = "Section", Default = true})
+Section:Paragraph({
+    Title = "Paragraph",
+})
+Section:Button({
+    Title = "Button",
+})
+Section:Toggle({
+    Title = "Toggle",
+})
+local Section = VTab:Section({Title = "Paragraph IconSize", Default = true})
+Section:Paragraph({
+    Title = "Paragraph",
+    Desc = "Size: 15",
+    Icon = "bird",
+    IconSize = 15
+})
+local Section = VTab:Section({Title = "Slider Width", Default = true})
+Section:Slider({
+    Title = "Slider",
+    Desc = "Width: 50",
+    Width = 50
+})
+Section:Slider({
+    Title = "Slider",
+    Desc = "Width: 90",
+    Width = 90
+})
+local Group = Section:Group({})
+Group:Slider({
+    Title = "Slider",
+    Desc = "Width: 30",
+    Width = 30
+})
+Group:Slider({
+    Title = "Slider",
+    Desc = "Width: 30",
+    Width = 30
 })
 --]]
