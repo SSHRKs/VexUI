@@ -59,7 +59,7 @@ local GroupTab = Window:Tab({Title = "Group", Icon = "group",Border = true,})
 Window:SelectTab(1)
 local Section = Window:Section({ Title = "Other", Icon = "hash" })
 local Settings = Section:Tab({ Title = "Settings", Icon = "settings",Border = true})
-local VTab = Section:Tab({ Title = "V 1.0.9", Icon = "settings",Border = true})
+local VTab = Section:Tab({ Title = "V 1.1.0", Icon = "settings",Border = true})
 
 DisplayElements:Section({Title = "Section"})
 DisplayElements:Paragraph({
