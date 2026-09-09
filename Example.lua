@@ -88,15 +88,49 @@ ManagementTab:Button({
 ManagementTab:Button({
     Title = "Test Text Icon <bird> bebebe",
     Desc = "This is a button <bird> bebebe",
-    Callback = function()
-        print("Click")
-    end
 })
 ManagementTab:Toggle({
     Title = "Toggle <toggle-left>",
     Desc = "This is a toggle",
     Callback = function(Value)
         print(Value)
+    end
+})
+ManagementTab:Toggle({
+    Value = {"1","2","3"},
+    Default = "1",
+    Callback = function(Value)
+        print("Pisun "..Value)
+    end
+})
+ManagementTab:Toggle({
+    Value = {"1","2","3"},
+    Default = "2",
+    Callback = function(Value)
+        print("Pisun "..Value)
+    end
+})
+local be = ManagementTab:Toggle({
+    Value = {"1","2","3"},
+    Default = "3",
+    Callback = function(Value)
+        print("Pisun "..Value)
+    end
+})
+local Group = ManagementTab:Group({Title = "Group", Icon = "group"})
+Group:Toggle({
+    Value = {"1","2","3"},
+    Default = "3",
+    Callback = function(Value)
+        be:SetValue(Value)
+    end
+})
+Group:Toggle({
+    Value = {"1","2","3"},
+    Locked = true,
+    Default = "3",
+    Callback = function(Value)
+        print("Pisun "..Value)
     end
 })
 ManagementTab:Slider({
@@ -138,6 +172,14 @@ ManagementTab:Dropdown({
 		print(unpack(Value))
 	end
 })
+
+local Bcolor = ManagementTab:Section({Title = "Color Button"})
+local Colors = {"Red", "Coral", "Orange", "Yellow", "Green", "Mint", "Cyan", "Blue", "Purple", "Pink"}
+local ColorCount = 0
+for i = 1, 10 do
+    ColorCount = ColorCount + 1
+    Bcolor:Button({Title = Colors[ColorCount],Color = Colors[ColorCount]})
+end
 
 --#InputTab
 local Input = InputTab:Input({
