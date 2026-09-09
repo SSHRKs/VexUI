@@ -69,7 +69,7 @@ DisplayElements:Paragraph({
     Thumbnail = "rbxassetid://78903626783621",
     Icon = "solar:lock-keyhole-unlocked-broken"
 })
-DisplayElements:Section({Title = "Color Paragraph", Icon = "paintbrush"})
+DisplayElements:Section({Title = "Color Paragraph"})
 local Colors = {"Red", "Coral", "Orange", "Yellow", "Green", "Mint", "Cyan", "Blue", "Purple", "Pink"}
 local ColorCount = 0
 for i = 1, 10 do
