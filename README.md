@@ -1,4 +1,4 @@
-![UI](https://github.com/SSHRKs/VexUI/blob/main/Images/Window.png)
+![UI](https://github.com/SSHRKs/VexUI/blob/main/Images/Ui.png)
 
 ## **[Documentation](https://sshrks.github.io/VexUI/#loadstring)**  |  **[Example](https://github.com/SSHRKs/VexUI/blob/main/Example.lua)**
 
