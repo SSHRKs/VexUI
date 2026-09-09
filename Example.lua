@@ -59,7 +59,6 @@ local GroupTab = Window:Tab({Title = "Group", Icon = "group",Border = true,})
 Window:SelectTab(1)
 local Section = Window:Section({ Title = "Other", Icon = "hash" })
 local Settings = Section:Tab({ Title = "Settings", Icon = "settings",Border = true})
-local VTab = Section:Tab({ Title = "V 1.1.0", Icon = "settings",Border = true})
 
 DisplayElements:Section({Title = "Section"})
 DisplayElements:Paragraph({
@@ -389,44 +388,4 @@ Settings:Button({
     Callback = function()
         Window:Destroy()
     end
-})
-
-local Section = VTab:Section({Title = "Section", Default = true})
-Section:Paragraph({
-    Title = "Paragraph",
-})
-Section:Button({
-    Title = "Button",
-})
-Section:Toggle({
-    Title = "Toggle",
-})
-local Section = VTab:Section({Title = "Paragraph IconSize", Default = true})
-Section:Paragraph({
-    Title = "Paragraph",
-    Desc = "Size: 15",
-    Icon = "bird",
-    IconSize = 15
-})
-local Section = VTab:Section({Title = "Slider Width", Default = true})
-Section:Slider({
-    Title = "Slider",
-    Desc = "Width: 50",
-    Width = 50
-})
-Section:Slider({
-    Title = "Slider",
-    Desc = "Width: 90",
-    Width = 90
-})
-local Group = Section:Group({})
-Group:Slider({
-    Title = "Slider",
-    Desc = "Width: 30",
-    Width = 30
-})
-Group:Slider({
-    Title = "Slider",
-    Desc = "Width: 30",
-    Width = 30
 })
