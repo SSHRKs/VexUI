@@ -3,13 +3,21 @@ local Window = VexUI:CreateWindow({
     Name = "VexUI Example",
     Icon = "door-open",
     SideBarWidth = 160,
-    Theme = "Dark",
+    Theme = "Darked",
     Transparent = true,
     Author = "By .s.h.ark.",
-    User = {
+    --[[User = {
         Enabled = true,
         Anonymous = true,
     },
+    KeySystem = {
+        Title = "VexUI Example",
+        Desc = "This is an example of a key system using VexUI. \nKey: 1234 <key-round>",
+        KeyValidator = function(key)
+            return key == "1234"
+        end,
+        URL = "1234",
+    },--]]
 })
 
 Window:EditOpenButton({
@@ -51,8 +59,9 @@ local GroupTab = Window:Tab({Title = "Group", Icon = "group",Border = true,})
 Window:SelectTab(1)
 local Section = Window:Section({ Title = "Other", Icon = "hash" })
 local Settings = Section:Tab({ Title = "Settings", Icon = "settings",Border = true})
+local VTab = Section:Tab({ Title = "V 1.1.1", Icon = "settings",Border = true})
 
-DisplayElements:Section({Title = "Section"})
+local Section = DisplayElements:Section({Title = "Section", Default = false})
 DisplayElements:Paragraph({
     Title = "Paragraph",
     Desc = "This is a Paragraph",
@@ -61,6 +70,9 @@ DisplayElements:Paragraph({
     Title = "Paragraph Icon <smile>",
     Desc = "This is a Paragraph",
     Icon = "bird"
+})
+DisplayElements:Text({
+    Text = "It's Text ebebebebebebebebebebebe",
 })
 DisplayElements:Devider()
 DisplayElements:Paragraph({
@@ -423,3 +435,27 @@ Settings:Button({
         Window:Destroy()
     end
 })
+
+local Section = VTab:Section({Title = "Section Border: true", Default = true,Border = true})
+Section:Slider({
+    Title = "Slider",
+    Desc = "Width: 50",
+    Width = 50
+})
+Section:Slider({
+    Title = "Slider",
+    Desc = "Width: 90",
+    Width = 90
+})
+local Group = Section:Group({})
+Group:Slider({
+    Title = "Slider",
+    Desc = "Width: 30",
+    Width = 30
+})
+Group:Slider({
+    Title = "Slider",
+    Desc = "Width: 30",
+    Width = 30
+})
+--]]
